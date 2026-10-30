@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<title>לוח משפחתי</title>
+<title>דשבורד רפואי</title>
 <style>
 :root{--bg:#f6f5f1;--card:#fff;--soft:#eeece6;--text:#22211e;--muted:#6b6a64;--line:#dedbd2;--accent:#1d5fa5;--accent-bg:#e4eefa;--red:#a32d2d;--red-bg:#fcebeb;--green:#2f6a13;--green-bg:#e9f3dc;--amber:#7c4a08;--amber-bg:#faeeda}
 @media (prefers-color-scheme:dark){:root{--bg:#1a1a18;--card:#242422;--soft:#2e2e2b;--text:#f1efe8;--muted:#a9a79f;--line:#3b3b37;--accent:#8fbff0;--accent-bg:#17334f;--red:#f3a6a6;--red-bg:#4b1a1a;--green:#a9d67a;--green-bg:#233a12;--amber:#f2c078;--amber-bg:#46300f}}
@@ -67,7 +67,7 @@ h2.group{font-size:14px;font-weight:600;color:var(--muted);margin:18px 0 8px}
 <main>
   <div class="gate" id="gate">
     <form id="form">
-      <h1>לוח משפחתי</h1>
+      <h1>דשבורד רפואי</h1>
       <input type="password" id="password" aria-label="סיסמה" placeholder="סיסמה" autocomplete="current-password" autofocus>
       <label><input type="checkbox" id="remember"> לזכור במכשיר הזה</label>
       <button type="submit" id="submit">כניסה</button>
@@ -162,8 +162,8 @@ function renderMeds(p) {
 
 function appointmentRow(a, past) {
   return `<div class="row ${past ? "past" : ""}"><div class="line">
-    <div><strong>${esc(a.title)}</strong><small>${esc(a.place)}</small>${a.phone ? `<small>${rich(a.phone)}</small>` : ""}${a.bring ? `<small>להביא: ${esc(a.bring)}</small>` : ""}</div>
-    <span class="when">${shortDate(a.date)}</span></div></div>`;
+    <div><strong>${esc(a.title)}</strong><small>${esc(a.place)}</small>${a.phone ? `<small>${rich(a.phone)}</small>` : ""}${a.bring ? `<small>להביא: ${esc(a.bring)}</small>` : ""}${a.note ? `<small>${esc(a.note)}</small>` : ""}</div>
+    <span class="when">${shortDate(a.date)}${a.time ? `<small>${esc(a.time)}</small>` : ""}</span></div></div>`;
 }
 
 function renderAppointments(p) {
