@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>לוח משפחתי</title>
+<style>
+:root{--bg:#f6f5f1;--card:#fff;--soft:#eeece6;--text:#22211e;--muted:#6b6a64;--line:#dedbd2;--accent:#1d5fa5;--accent-bg:#e4eefa;--red:#a32d2d;--red-bg:#fcebeb;--green:#2f6a13;--green-bg:#e9f3dc;--amber:#7c4a08;--amber-bg:#faeeda}
+@media (prefers-color-scheme:dark){:root{--bg:#1a1a18;--card:#242422;--soft:#2e2e2b;--text:#f1efe8;--muted:#a9a79f;--line:#3b3b37;--accent:#8fbff0;--accent-bg:#17334f;--red:#f3a6a6;--red-bg:#4b1a1a;--green:#a9d67a;--green-bg:#233a12;--amber:#f2c078;--amber-bg:#46300f}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+main{max-width:720px;margin:0 auto;padding:max(16px,env(safe-area-inset-top)) 16px calc(32px + env(safe-area-inset-bottom))}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+[hidden]{display:none!important}
+.gate{min-height:80vh;display:flex;align-items:center;justify-content:center}
+.gate form{width:100%;max-width:340px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px}
+.gate h1{font-size:20px;font-weight:600;margin:0 0 16px}
+.gate input[type=password]{width:100%;height:46px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);direction:ltr}
+.gate label{display:flex;gap:8px;align-items:center;margin:12px 0 16px;font-size:14px;color:var(--muted)}
+.gate button{width:100%;height:46px;border:0;border-radius:8px;background:var(--accent);color:var(--card);font-weight:600}
+.error{color:var(--red);font-size:14px;margin:10px 0 0}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-size:13px;color:var(--muted)}
+.top button{background:none;border:0;color:var(--muted);text-decoration:underline;padding:6px 0}
+.people{display:flex;gap:8px;margin-bottom:12px}
+.people button{flex:1;height:48px;border:1px solid var(--line);border-radius:10px;background:var(--card);font-size:17px}
+.people button[aria-pressed=true]{background:var(--accent-bg);border-color:var(--accent);color:var(--accent);font-weight:600}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:14px}
+.stat{background:var(--soft);border-radius:10px;padding:10px 12px;min-width:0}
+.stat b{display:block;font-size:20px;font-weight:600}
+.stat span{font-size:12px;color:var(--muted)}
+.views{display:flex;border-bottom:1px solid var(--line);margin-bottom:14px}
+.views button{flex:1;background:none;border:0;border-bottom:2px solid transparent;padding:10px 4px;color:var(--muted)}
+.views button[aria-selected=true]{color:var(--text);border-bottom-color:var(--accent);font-weight:600}
+details{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:8px}
+summary{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"‹";color:var(--muted);font-size:20px;line-height:1;transition:transform .15s}
+details[open] summary::before{transform:rotate(-90deg)}
+.name{flex:1;min-width:0;font-weight:600}
+.name small{display:block;font-weight:400;font-size:13px;color:var(--muted)}
+.badge{font-size:12px;padding:3px 9px;border-radius:7px;white-space:nowrap;flex:none}
+.todo{background:var(--red-bg);color:var(--red)}
+.appt{background:var(--accent-bg);color:var(--accent)}
+.ok{background:var(--green-bg);color:var(--green)}
+.temp{background:var(--amber-bg);color:var(--amber)}
+.fixed{background:var(--soft);color:var(--muted)}
+.body{padding:2px 14px 14px;border-top:1px solid var(--line);font-size:15px}
+.body h3{font-size:13px;font-weight:600;color:var(--muted);margin:12px 0 2px}
+.body p{margin:0}
+.body ul{margin:0;padding-inline-start:18px}
+.row{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px}
+.row .line{display:flex;gap:10px;justify-content:space-between;align-items:flex-start}
+.row strong{font-weight:600}
+.row small{display:block;color:var(--muted);font-size:13px}
+.flag{color:var(--amber);font-size:13px;margin-top:4px}
+.tel{color:var(--accent);white-space:nowrap}
+.when{font-weight:600;color:var(--accent);white-space:nowrap}
+h2.group{font-size:14px;font-weight:600;color:var(--muted);margin:18px 0 8px}
+.empty{background:var(--soft);border-radius:12px;padding:20px;text-align:center;color:var(--muted)}
+.past{opacity:.75}
+@media (max-width:440px){summary{flex-wrap:wrap}.name{flex-basis:calc(100% - 30px)}.badge{margin-inline-start:30px}}
+</style>
+</head>
+<body>
+<main>
+  <div class="gate" id="gate">
+    <form id="form">
+      <h1>לוח משפחתי</h1>
+      <input type="password" id="password" aria-label="סיסמה" placeholder="סיסמה" autocomplete="current-password" autofocus>
+      <label><input type="checkbox" id="remember"> לזכור במכשיר הזה</label>
+      <button type="submit" id="submit">כניסה</button>
+      <p class="error" id="error" hidden></p>
+    </form>
+  </div>
+  <div id="app" hidden></div>
+</main>
+<script>
+const KEY_NAME = "family-key";
+const VIEW_NAME = "family-person";
+const STATUS_ORDER = { todo: 0, appt: 1, ok: 2 };
+const VIEWS = [["topics", "נושאים"], ["meds", "תרופות"], ["appointments", "תורים"]];
+
+const gate = document.getElementById("gate");
+const app = document.getElementById("app");
+const errorBox = document.getElementById("error");
+const submit = document.getElementById("submit");
+let family, person, view = "topics";
+
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  del(k) { try { localStorage.removeItem(k); } catch {} },
+};
+const fromB64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+const toB64 = b => btoa(String.fromCharCode(...new Uint8Array(b)));
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const rich = s => esc(s).replace(/0\d{1,2}-\d{7}/g, n => `<a class="tel" dir="ltr" href="tel:${n.replace("-", "")}">${n}</a>`);
+const today = () => new Date().toLocaleDateString("en-CA");
+const shortDate = iso => { const [y, m, d] = iso.split("-"); return `${+d}.${+m}.${y.slice(2)}`; };
+
+async function deriveKey(password, payload) {
+  const material = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey(
+    { name: "PBKDF2", hash: "SHA-256", salt: fromB64(payload.salt), iterations: payload.iterations },
+    material, { name: "AES-GCM", length: 256 }, true, ["decrypt"]);
+}
+
+async function decrypt(key, payload) {
+  const plain = await crypto.subtle.decrypt({ name: "AES-GCM", iv: fromB64(payload.iv) }, key, fromB64(payload.data));
+  return JSON.parse(new TextDecoder().decode(plain));
+}
+
+async function loadPayload() {
+  const res = await fetch("data.enc.json", { cache: "no-store" });
+  if (!res.ok) throw new Error("load");
+  return res.json();
+}
+
+function open(data) {
+  family = data;
+  person = family.people.find(p => p.id === store.get(VIEW_NAME)) || family.people[0];
+  gate.hidden = true;
+  app.hidden = false;
+  render();
+}
+
+function nextAppointment(p) {
+  return p.appointments.filter(a => a.date >= today()).sort((a, b) => a.date.localeCompare(b.date))[0];
+}
+
+function renderTopics(p) {
+  if (!p.topics.length) return `<div class="empty">עוד אין נושאים של ${esc(p.name)}.</div>`;
+  const sorted = [...p.topics].sort((a, b) => STATUS_ORDER[a.status] - STATUS_ORDER[b.status]);
+  return sorted.map(t => `<details>
+    <summary><span class="name">${esc(t.title)}<small>${esc(t.subtitle)}</small></span><span class="badge ${esc(t.status)}">${esc(t.badge)}</span></summary>
+    <div class="body">
+      <h3>מצב</h3><p>${rich(t.state)}</p>
+      <h3>מה הלאה</h3><p>${rich(t.next)}</p>
+      <h3>מי מטפל</h3><p>${rich(t.who)}</p>
+      ${t.docs.length ? `<h3>מסמכים</h3><ul>${t.docs.map(d => `<li>${esc(d.name)} (${shortDate(d.date)})</li>`).join("")}</ul>` : ""}
+    </div></details>`).join("");
+}
+
+function medRow(m) {
+  return `<div class="row"><div class="line">
+    <div><strong>${esc(m.name)}</strong><small>${esc(m.why)} · ${esc(m.dose)}</small></div>
+    <span class="badge ${esc(m.type)}">${m.type === "temp" ? "זמנית" : "קבועה"}</span></div>
+    ${m.flag ? `<div class="flag">${esc(m.flag)}</div>` : ""}</div>`;
+}
+
+function renderMeds(p) {
+  if (!p.meds.length) return `<div class="empty">עוד אין תרופות של ${esc(p.name)}.</div>`;
+  const temp = p.meds.filter(m => m.type === "temp");
+  const fixed = p.meds.filter(m => m.type !== "temp");
+  const dates = p.meds.map(m => m.updated).sort();
+  return `${temp.length ? `<h2 class="group">זמניות</h2>${temp.map(medRow).join("")}` : ""}
+    <h2 class="group">קבועות</h2>${fixed.map(medRow).join("")}
+    <p class="stat"><span>הרשימה עודכנה לפי מסמך מ-${shortDate(dates[dates.length - 1])}</span></p>`;
+}
+
+function appointmentRow(a, past) {
+  return `<div class="row ${past ? "past" : ""}"><div class="line">
+    <div><strong>${esc(a.title)}</strong><small>${esc(a.place)}</small>${a.phone ? `<small>${rich(a.phone)}</small>` : ""}${a.bring ? `<small>להביא: ${esc(a.bring)}</small>` : ""}</div>
+    <span class="when">${shortDate(a.date)}</span></div></div>`;
+}
+
+function renderAppointments(p) {
+  if (!p.appointments.length) return `<div class="empty">אין תורים של ${esc(p.name)}.</div>`;
+  const sorted = [...p.appointments].sort((a, b) => a.date.localeCompare(b.date));
+  const coming = sorted.filter(a => a.date >= today());
+  const past = sorted.filter(a => a.date < today()).reverse();
+  return `${coming.length ? coming.map(a => appointmentRow(a, false)).join("") : `<div class="empty">אין תורים קרובים.</div>`}
+    ${past.length ? `<h2 class="group">תורים שעברו</h2>${past.map(a => appointmentRow(a, true)).join("")}` : ""}`;
+}
+
+function render() {
+  const next = nextAppointment(person);
+  const open = person.topics.filter(t => t.status === "todo").length;
+  const body = { topics: renderTopics, meds: renderMeds, appointments: renderAppointments }[view](person);
+  app.innerHTML = `
+    <div class="top"><span>עודכן ${shortDate(family.updated)}</span><button id="lock">יציאה</button></div>
+    <div class="people">${family.people.map(p => `<button data-person="${esc(p.id)}" aria-pressed="${p === person}">${esc(p.name)}</button>`).join("")}</div>
+    <div class="stats">
+      <div class="stat"><b>${open}</b><span>לטיפול</span></div>
+      <div class="stat"><b>${next ? shortDate(next.date) : "—"}</b><span>התור הבא</span></div>
+      <div class="stat"><b>${person.meds.length}</b><span>תרופות</span></div>
+    </div>
+    <div class="views" role="tablist">${VIEWS.map(([id, label]) => `<button role="tab" data-view="${id}" aria-selected="${view === id}">${label}</button>`).join("")}</div>
+    ${body}`;
+}
+
+app.addEventListener("click", e => {
+  const btn = e.target.closest("button");
+  if (!btn) return;
+  if (btn.id === "lock") { store.del(KEY_NAME); location.reload(); return; }
+  if (btn.dataset.person) {
+    person = family.people.find(p => p.id === btn.dataset.person);
+    store.set(VIEW_NAME, person.id);
+  }
+  if (btn.dataset.view) view = btn.dataset.view;
+  render();
+});
+
+document.getElementById("form").addEventListener("submit", async e => {
+  e.preventDefault();
+  errorBox.hidden = true;
+  const password = document.getElementById("password").value;
+  if (!password) { errorBox.textContent = "יש להזין סיסמה"; errorBox.hidden = false; return; }
+  submit.disabled = true;
+  submit.textContent = "פותח…";
+  try {
+    const payload = await loadPayload();
+    const key = await deriveKey(password, payload);
+    const data = await decrypt(key, payload);
+    if (document.getElementById("remember").checked) {
+      store.set(KEY_NAME, toB64(await crypto.subtle.exportKey("raw", key)));
+    }
+    open(data);
+  } catch (err) {
+    errorBox.textContent = err.message === "load" ? "לא הצלחנו לטעון את הנתונים. נסו שוב." : "הסיסמה לא נכונה";
+    errorBox.hidden = false;
+  }
+  submit.disabled = false;
+  submit.textContent = "כניסה";
+});
+
+(async () => {
+  const saved = store.get(KEY_NAME);
+  if (!saved) return;
+  try {
+    const payload = await loadPayload();
+    const key = await crypto.subtle.importKey("raw", fromB64(saved), "AES-GCM", false, ["decrypt"]);
+    open(await decrypt(key, payload));
+  } catch {
+    store.del(KEY_NAME);
+  }
+})();
+</script>
+</body>
+</html>
