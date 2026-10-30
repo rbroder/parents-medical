@@ -80,6 +80,8 @@ h2.group{font-size:14px;font-weight:600;color:var(--muted);margin:18px 0 8px}
 const KEY_NAME = "family-key";
 const VIEW_NAME = "family-person";
 const STATUS_ORDER = { todo: 0, appt: 1, ok: 2 };
+const MED_LABEL = { temp: "זמנית", check: "לבדוק", fixed: "קבועה" };
+const MED_STYLE = { temp: "temp", check: "todo", fixed: "fixed" };
 const VIEWS = [["topics", "נושאים"], ["meds", "תרופות"], ["appointments", "תורים"]];
 
 const gate = document.getElementById("gate");
@@ -139,6 +141,7 @@ function renderTopics(p) {
       <h3>מצב</h3><p>${rich(t.state)}</p>
       <h3>מה הלאה</h3><p>${rich(t.next)}</p>
       <h3>מי מטפל</h3><p>${rich(t.who)}</p>
+      ${t.timeline ? `<h3>היסטוריה</h3><ul>${t.timeline.map(([date, text]) => `<li>${shortDate(date)}: ${esc(text)}</li>`).join("")}</ul>` : ""}
       ${t.docs.length ? `<h3>מסמכים</h3><ul>${t.docs.map(d => `<li>${esc(d.name)} (${shortDate(d.date)})</li>`).join("")}</ul>` : ""}
     </div></details>`).join("");
 }
@@ -146,16 +149,18 @@ function renderTopics(p) {
 function medRow(m) {
   return `<div class="row"><div class="line">
     <div><strong>${esc(m.name)}</strong><small>${esc(m.why)} · ${esc(m.dose)}</small></div>
-    <span class="badge ${esc(m.type)}">${m.type === "temp" ? "זמנית" : "קבועה"}</span></div>
+    <span class="badge ${MED_STYLE[m.type]}">${MED_LABEL[m.type]}</span></div>
     ${m.flag ? `<div class="flag">${esc(m.flag)}</div>` : ""}</div>`;
 }
 
 function renderMeds(p) {
   if (!p.meds.length) return `<div class="empty">עוד אין תרופות של ${esc(p.name)}.</div>`;
   const temp = p.meds.filter(m => m.type === "temp");
-  const fixed = p.meds.filter(m => m.type !== "temp");
+  const check = p.meds.filter(m => m.type === "check");
+  const fixed = p.meds.filter(m => m.type === "fixed");
   const dates = p.meds.map(m => m.updated).sort();
   return `${temp.length ? `<h2 class="group">זמניות</h2>${temp.map(medRow).join("")}` : ""}
+    ${check.length ? `<h2 class="group">לבדוק אם עדיין נוטל</h2>${check.map(medRow).join("")}` : ""}
     <h2 class="group">קבועות</h2>${fixed.map(medRow).join("")}
     <p class="stat"><span>הרשימה עודכנה לפי מסמך מ-${shortDate(dates[dates.length - 1])}</span></p>`;
 }
